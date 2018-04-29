@@ -43,8 +43,6 @@ namespace XLib.ViewMgmt
    {  static readonly private string NO_VIEW_EXCEPTION = "No prefab or cached view available for: " ;
       static readonly private string NO_VIEW_TO_DISPLAY_WARNING = "There are no views left to display";
       static readonly private string NOT_ENOUGH_VIEWS_TO_GO_BACK_ERROR_FORMAT = "Failed to go back {0} views. There aren't enough views in the stack";
-      static readonly private string INTRANSITION_NOT_FOUND_WARNING_FORMAT = "InTransition {0} not found";
-      static readonly private string OUTTRANSITION_NOT_FOUND_WARNING_FORMAT = "OutTransition {0} not found";
       static readonly private int VIEW_STACK_DEFAULT_START_SIZE = 10;
       static readonly private int TRANSITION_LIST_DEFAULT_START_SIZE = 50;
       private WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
@@ -203,20 +201,12 @@ namespace XLib.ViewMgmt
                      while (enumeratorOut.MoveNext())
                         yield return enumeratorOut.Current;
                }
-               else if (!String.IsNullOrEmpty(pTransition.TransitionInName))
-               {  //Log a warning
-                  Debug.LogWarningFormat(INTRANSITION_NOT_FOUND_WARNING_FORMAT, pTransition.TransitionInName);
-               }
 
                if (transitionIn != null)
                {  var enumeratorIn = transitionIn.GetEnumerator(pInfo);
                   if (enumeratorIn != null)
                      while (enumeratorIn.MoveNext())
                         yield return enumeratorIn.Current;
-               }
-               else if (!String.IsNullOrEmpty(pTransition.TransitionOutName))
-               {  //Log a warning
-                  Debug.LogWarningFormat(OUTTRANSITION_NOT_FOUND_WARNING_FORMAT, pTransition.TransitionInName);
                }
             }
          }
