@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace XLib.EditorScripts.Util
 {
-   public class EditorGUIPropertyBlock : System.IDisposable
+   sealed public class EditorGUIPropertyBlock : System.IDisposable
    {  static private EditorGUIPropertyBlock _instance;
 
       private EditorGUIPropertyBlock() { }
