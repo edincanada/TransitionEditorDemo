@@ -7,5 +7,5 @@ namespace XLib.ViewMgmt.Transitions
 {
    using Util;
 
-   public class OutTransitionAnimClip : BaseTransitionAnimClip, OutTransition { }
+   public class OutTransitionAnimClip : BaseTransitionAnimClip, TransitionOutro { }
 }

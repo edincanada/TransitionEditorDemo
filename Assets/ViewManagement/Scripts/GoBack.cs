@@ -1,10 +1,15 @@
 ﻿
 using UnityEngine;
 
+using UnityEngine.Assertions;
+
 namespace XLib.ViewMgmt
 {
    public class GoBack : MonoBehaviour
-   {  [SerializeField]
+   {
+      static readonly private string VIEW_MANAGER_NULL_EXCEPTION = "_viewManager not set to an instance of a VIewManager object";
+
+      [SerializeField]
       bool _goBackOnEnable = false;
 
       [SerializeField]
@@ -13,16 +18,23 @@ namespace XLib.ViewMgmt
 
       [SerializeField]
       [SelectViewTransition]
-      string _transition = null;
+      string _transition = default;
 
       [SerializeField]
-      ViewManager _viewManager;
+      ViewManager _viewManager = default;
 
       virtual protected void OnEnable()
       {  if (_goBackOnEnable)
             DoGoBack();
       }
 
-      public void DoGoBack() { _viewManager.GoBack(_count, null, _transition); }
+      public void DoGoBack()
+      {
+         Assert.IsTrue(_viewManager, VIEW_MANAGER_NULL_EXCEPTION);
+         Debug.Assert(_viewManager != null, VIEW_MANAGER_NULL_EXCEPTION);
+         System.Diagnostics.Debug.Assert(_viewManager != null, VIEW_MANAGER_NULL_EXCEPTION);
+
+         _viewManager.GoBack(_count, null, _transition);
+      }
    }
 }

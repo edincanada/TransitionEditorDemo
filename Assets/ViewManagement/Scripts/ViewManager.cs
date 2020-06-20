@@ -1,8 +1,11 @@
 ﻿
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using UnityEngine.Assertions;
+
 
 namespace XLib.ViewMgmt
 {
@@ -25,13 +28,16 @@ namespace XLib.ViewMgmt
       }
 
       public void Add (IGameView pView)
-	   {  try { DebugUtil.LogAssert(pView != null, CANT_CACHE_NULL_VIEW_ERROR); }
-         catch (Exception e) { throw new Exception(e.Message); }
+	   {
+         Assert.IsNotNull(pView, CANT_CACHE_NULL_VIEW_ERROR);
+         Debug.Assert(null != pView, CANT_CACHE_NULL_VIEW_ERROR);
+         System.Diagnostics.Debug.Assert(null != pView, CANT_CACHE_NULL_VIEW_ERROR);
+
 
          _AddOrSetIfNull(pView.ViewName, new List<IGameView>());
             //If the view is already cached. Warning. Else, cache it.
 			if (this[pView.ViewName].Contains(pView))
-            Debug.LogWarning(String.Format(ALREADY_CACHED_WARNING_FORMAT, pView.ViewName));
+            Debug.LogWarning(System.String.Format(ALREADY_CACHED_WARNING_FORMAT, pView.ViewName));
 			else
 			   this[pView.ViewName].Insert(0, pView);
 	   }
@@ -51,8 +57,8 @@ namespace XLib.ViewMgmt
       ViewCache _viewCache = new ViewCache();
       List<IGameView> _viewStack = new List<IGameView>(VIEW_STACK_DEFAULT_START_SIZE);
 
-      [SerializeField] GameObject _activeViewStackGameObject = null;
-      [SerializeField] GameObject _cacheGameObject = null;
+      [SerializeField] GameObject _activeViewStackGameObject = default;
+      [SerializeField] GameObject _cacheGameObject = default;
 
       Dictionary<string, IViewTransition> _viewTransitions = new Dictionary<string, IViewTransition>(TRANSITION_LIST_DEFAULT_START_SIZE);
       bool _initialized = false;
@@ -88,8 +94,7 @@ namespace XLib.ViewMgmt
          Transform cacheTransform = _cacheGameObject.transform;
          int cacheCount = cacheTransform.childCount;
          for (int ii = 0; ii < cacheCount; ii++)
-         {
-            GameObject cachedViewGameObject = cacheTransform.GetChild(ii).gameObject;
+         {  GameObject cachedViewGameObject = cacheTransform.GetChild(ii).gameObject;
             IGameView view = cachedViewGameObject.GetComponent<IGameView>();
 
             if (view != null)
@@ -128,7 +133,7 @@ namespace XLib.ViewMgmt
       }
 
       IViewTransition _GetTransition(string pName)
-      {  if (!String.IsNullOrEmpty(pName) && _viewTransitions != null && _viewTransitions.ContainsKey(pName))
+      {  if (!System.String.IsNullOrEmpty(pName) && _viewTransitions != null && _viewTransitions.ContainsKey(pName))
             return _viewTransitions[pName];
 
          return null;
@@ -145,7 +150,7 @@ namespace XLib.ViewMgmt
       {  IList<IGameView> cachedViews;
          IGameView cachedView = null;
          GameObject cachedViewGameObject = null ;
-         if (!String.IsNullOrEmpty(pView) && _viewCache.ContainsKey(pView))
+         if (!System.String.IsNullOrEmpty(pView) && _viewCache.ContainsKey(pView))
          {  cachedViews = _viewCache[pView];
             if (cachedViews != null && cachedViews.Count > 0)
             {  cachedView = cachedViews[0];
@@ -155,7 +160,7 @@ namespace XLib.ViewMgmt
          }
 
          if (cachedViewGameObject == null &&
-               !String.IsNullOrEmpty(pView) &&
+               !System.String.IsNullOrEmpty(pView) &&
                _viewPrefabs.ContainsKey(pView) &&
                _viewPrefabs[pView] != null)
          {
@@ -176,34 +181,36 @@ namespace XLib.ViewMgmt
       {
 	      if (pTransition != null)
          {  //get transitions.
-            ITransition transitionIn = null;
-            ITransition transitionOut = null;
+            ITransition transitionIntro = null;
+            TransitionOutro transitionOutro = null;
 
             if (pEntering != null)
-               transitionIn = pEntering.TransitionIn(pTransition.TransitionInName, pInfo);
+               transitionIntro = pEntering.TransitionIntro(pTransition.TransitionInName, pInfo);
 
             if (pLeaving != null)
-               transitionOut = pLeaving.TransitionOut(pTransition.TransitionOutName, pInfo);
+               transitionOutro = pLeaving.TransitionOutro(pTransition.TransitionOutName, pInfo);
 
             //run transitions.
-            if (pTransition.Simultaneous && transitionIn != null && transitionOut != null)
+            if (pTransition.Simultaneous && transitionIntro != null && transitionOutro != null)
             {  //Run both at the same time
-               var startOut = StartCoroutine(transitionOut.GetEnumerator(pInfo));
-               var startIn = StartCoroutine(transitionIn.GetEnumerator(pInfo));
+               var startOut = StartCoroutine(transitionOutro.GetEnumerator(pInfo));
+               var startIn = StartCoroutine(transitionIntro.GetEnumerator(pInfo));
 
                yield return startOut;
                yield return startIn;
             }
             else
-            {  if (transitionOut != null)
-               {  var enumeratorOut = transitionOut.GetEnumerator(pInfo);
+            {  if (transitionOutro != null)
+               {  var enumeratorOut = transitionOutro.GetEnumerator(pInfo);
                   if (enumeratorOut != null)
                      while (enumeratorOut.MoveNext())
                         yield return enumeratorOut.Current;
+
+                  transitionOutro.moveViewToBackground();
                }
 
-               if (transitionIn != null)
-               {  var enumeratorIn = transitionIn.GetEnumerator(pInfo);
+               if (transitionIntro != null)
+               {  var enumeratorIn = transitionIntro.GetEnumerator(pInfo);
                   if (enumeratorIn != null)
                      while (enumeratorIn.MoveNext())
                         yield return enumeratorIn.Current;
@@ -232,24 +239,30 @@ namespace XLib.ViewMgmt
             //get reference to next.
             GameObject nextViewGameObject = _GetCachedOrCreateNew(pViewName);
 
-            try { DebugUtil.LogAssert(this, nextViewGameObject != null, NO_VIEW_EXCEPTION + pViewName); }
-            catch (Exception e) { throw new Exception(e.Message); }
+            //Assert if there is no next view game object.
+            Assert.IsNotNull(nextViewGameObject, NO_VIEW_EXCEPTION + pViewName);
+            Debug.Assert(nextViewGameObject != null, NO_VIEW_EXCEPTION + pViewName);
+            System.Diagnostics.Debug.Assert(nextViewGameObject != null, NO_VIEW_EXCEPTION + pViewName);
 
+            //Get a reference to the next view's component
             IGameView next = nextViewGameObject.GetComponent<IGameView>();
 
-            //Enable next.
+            //Add the next view to the view stack and enable the next view.
             nextViewGameObject.transform.SetParent(_activeViewStackGameObject.transform, false);
             nextViewGameObject.SetActive(true);
 
+            //Get the transition to use.
             IViewTransition transition = this._GetTransition(pTransitionName);
-            InTransition inTransition = null;
+            TransitionIntro transitionIntro = null;
 
+            //If a transition is used, get a reference to the transition intro.
             if (transition != null)
-               inTransition = next.TransitionIn(transition.TransitionInName);
+            {  transitionIntro = next.TransitionIntro(transition.TransitionInName);
 
-            //Check if the new view must come from the background
-            if (inTransition != null && inTransition.BeginsInTheBackground)
-               nextViewGameObject.transform.SetAsFirstSibling();
+               //Check if the new view must come from the background
+               if (transitionIntro.BeginsInTheBackground)
+                  transitionIntro.moveViewToBackground();
+            }
 
             //run willDisappear on current.
             if (current != null)
@@ -258,6 +271,7 @@ namespace XLib.ViewMgmt
                foreach (var handler in disappearHandlers)
                   handler.WillDisappear(pInfo);
 
+               //Run the WillDisappear coroutine on the current view.
                foreach (var it in current.WillDisappear(pInfo))
                   yield return it;
             }
@@ -265,6 +279,10 @@ namespace XLib.ViewMgmt
             //run WillAppear on next.
             foreach (var it in next.WillAppear(pInfo))
                yield return it;
+
+            //Rewind the out transition of the view that disappeared
+            if (current != null && current.TransitionOutro(transition.TransitionOutName) != null)
+               current.TransitionOutro(transition.TransitionOutName).Rewind();
 
             //Run transitions
             foreach (var step in _RunTransitions(current, next, transition, pInfo))
@@ -285,8 +303,8 @@ namespace XLib.ViewMgmt
                   yield return it;
 
                //Rewind the out transition of the view that disappeared
-               if (current.TransitionOut(transition.TransitionOutName) != null)
-                  current.TransitionOut(transition.TransitionOutName).Rewind();
+               if (current.TransitionOutro(transition.TransitionOutName) != null)
+                  current.TransitionOutro(transition.TransitionOutName).Rewind();
             }
 
             //disable current.
@@ -330,8 +348,9 @@ namespace XLib.ViewMgmt
                yield break;
             }
 
-            try { DebugUtil.LogAssertFormat(this, pGoBack <= _viewStack.Count, NOT_ENOUGH_VIEWS_TO_GO_BACK_ERROR_FORMAT, pGoBack); }
-            catch (Exception e) { throw new Exception(e.Message); }
+            Assert.IsTrue(pGoBack <= _viewStack.Count, System.String.Format(NOT_ENOUGH_VIEWS_TO_GO_BACK_ERROR_FORMAT, pGoBack));
+            Debug.Assert(pGoBack <= _viewStack.Count, System.String.Format(NOT_ENOUGH_VIEWS_TO_GO_BACK_ERROR_FORMAT, pGoBack));
+            System.Diagnostics.Debug.Assert(pGoBack <= _viewStack.Count, System.String.Format(NOT_ENOUGH_VIEWS_TO_GO_BACK_ERROR_FORMAT, pGoBack));
 
             //get rid of views in the middle.
             for (int ii = 1; ii < pGoBack; ii++)
@@ -361,10 +380,10 @@ namespace XLib.ViewMgmt
             IViewTransition transition = this._GetTransition(pTransitionName);
             if (next != null)
             {  next.gameObject.SetActive(true);
-               InTransition inTransition;
+               TransitionIntro transitionIntro;
                if (transition != null)
-               {  inTransition = next.TransitionIn(transition.TransitionInName);
-                  if (inTransition != null && !inTransition.BeginsInTheBackground)
+               {  transitionIntro = next.TransitionIntro(transition.TransitionInName);
+                  if (transitionIntro != null && !transitionIntro.BeginsInTheBackground)
                      next.gameObject.transform.SetAsLastSibling();
                }
             }
@@ -405,8 +424,8 @@ namespace XLib.ViewMgmt
             {  foreach (var it in current.DidDisappear(pInfo))
                   yield return it;
 
-               if (current.TransitionOut(transition.TransitionOutName) != null)
-                  current.TransitionOut(transition.TransitionOutName).Rewind();
+               if (current.TransitionOutro(transition.TransitionOutName) != null)
+                  current.TransitionOutro(transition.TransitionOutName).Rewind();
             }
 
             //current goes to the cache.

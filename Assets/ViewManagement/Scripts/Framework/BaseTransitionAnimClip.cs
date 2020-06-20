@@ -1,7 +1,8 @@
 ﻿
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+using UnityEngine.Assertions;
 
 namespace XLib.ViewMgmt.Transitions
 {
@@ -28,14 +29,15 @@ namespace XLib.ViewMgmt.Transitions
 
       virtual protected void OnEnable()
       {  _animator = GetComponent<Animator>();
-
-         try { DebugUtil.LogAssertFormat(this, _animator != null, NO_ANIMATOR_ERROR_FORMAT, gameObject.name); }
-         catch (Exception e) { throw new Exception(e.Message); }
+         Assert.IsNotNull(_animator, System.String.Format(NO_ANIMATOR_ERROR_FORMAT, gameObject.name));
+         Debug.Assert(_animator != null, System.String.Format(NO_ANIMATOR_ERROR_FORMAT, gameObject.name));
+         System.Diagnostics.Debug.Assert(_animator != null, System.String.Format(NO_ANIMATOR_ERROR_FORMAT, gameObject.name));
       }
 
       override public IEnumerator DoTransition (StringKeyDictionary pInfo)
-      {  try { DebugUtil.LogAssertFormat(this, _animator != null, ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name); }
-         catch (Exception e) { throw new Exception(e.Message); }
+      {  Assert.IsNotNull(_animator, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
+         Debug.Assert(_animator != null, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
+         System.Diagnostics.Debug.Assert(_animator != null, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
 
          _animator.speed = 1f;
          _animator.Play(_animClip, -1, 0.0f);
@@ -45,11 +47,14 @@ namespace XLib.ViewMgmt.Transitions
       }
 
       override public void Rewind ( )
-      {  try { DebugUtil.LogAssertFormat(this, _animator != null, ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name); }
-         catch (Exception e) { throw new Exception(e.Message); }
+      {  Assert.IsNotNull(_animator, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
+         Debug.Assert(_animator != null, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
+         System.Diagnostics.Debug.Assert(_animator != null, System.String.Format(ANIMATOR_MISSING_EXCEPTION_FORMAT, gameObject.name));
          _animator.Play(_animClip, -1, 0.0f);
          _animator.Update(0f);
          _animator.speed = 0;
       }
+
+      public void moveViewToBackground() { gameObject.transform.SetAsFirstSibling(); }
    }
 }

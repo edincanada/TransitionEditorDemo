@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/ViewManagement/Demo/MainViewSceneEditor.unity
+    guid: 729fe3f08b9fee44c85503d298dd3133

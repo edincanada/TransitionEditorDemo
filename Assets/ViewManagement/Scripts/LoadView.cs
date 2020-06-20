@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace XLib.ViewMgmt
 {
+   using Util;
    public class LoadView : MonoBehaviour
    {  [SerializeField]
       bool _loadOnEnable = false;
@@ -19,16 +20,18 @@ namespace XLib.ViewMgmt
       bool _replaceCurrent = false;
 
       [SerializeField]
-      ViewManager _viewManager;
+      ViewManager _viewManager = default;
 
       virtual protected void OnEnable ( )
       {  if (_loadOnEnable)
 		      DoLoad();
       }
 
-      public void DoLoad ( )
+      protected void DoLoadImpl(StringKeyDictionary pDict, bool pWaitIfBusy)
       {  //Load the view from the manager
-	      _viewManager.LoadView(_viewName, null, _transitionName, false, _replaceCurrent);
+         _viewManager.LoadView(_viewName, pDict, _transitionName, pWaitIfBusy, _replaceCurrent);
       }
+
+      virtual public void DoLoad ( ) { DoLoadImpl(null, false); }
    }
 }

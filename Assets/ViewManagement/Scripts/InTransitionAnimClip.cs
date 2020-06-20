@@ -6,7 +6,7 @@ namespace XLib.ViewMgmt.Transitions
 {
    using Util;
 
-   public class InTransitionAnimClip : BaseTransitionAnimClip, InTransition
+   public class InTransitionAnimClip : BaseTransitionAnimClip, TransitionIntro
    {  [SerializeField]
       [SelectAnimClip]
       string _idleClip = null;

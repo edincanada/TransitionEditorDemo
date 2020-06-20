@@ -12,19 +12,19 @@ namespace XLib.ViewMgmt
    {  abstract public bool CanBeCached { get ;  }
       abstract public string ViewName { get ; }
 
-      protected InTransition[] TransitionsIn;
-      protected OutTransition[] TransitionsOut;
+      protected TransitionIntro[] TransitionsIn;
+      protected TransitionOutro[] TransitionsOut;
 
       virtual protected void OnEnable()
-      {  TransitionsIn = GetComponents<InTransition>();
-         TransitionsOut = GetComponents<OutTransition>();
+      {  TransitionsIn = GetComponents<TransitionIntro>();
+         TransitionsOut = GetComponents<TransitionOutro>();
       }
 
       virtual public IEnumerable DidAppear(StringKeyDictionary pInfo) { yield break; }
 
       virtual public IEnumerable DidDisappear(StringKeyDictionary pInfo) { yield break; }
 
-      public InTransition TransitionIn(string pName, StringKeyDictionary pInfo, bool pSkip = false)
+      public TransitionIntro TransitionIntro(string pName, StringKeyDictionary pInfo, bool pSkip = false)
       {  if (!String.IsNullOrEmpty(pName))
             foreach (var trans in TransitionsIn)
                if (trans.TransitionName == pName)
@@ -33,7 +33,7 @@ namespace XLib.ViewMgmt
          return null;
       }
 
-      public OutTransition TransitionOut(string pName, StringKeyDictionary pInfo, bool pSkip = false)
+      public TransitionOutro TransitionOutro(string pName, StringKeyDictionary pInfo, bool pSkip = false)
       {  if (!String.IsNullOrEmpty(pName))
             foreach (var trans in TransitionsOut)
                if (trans.TransitionName == pName)

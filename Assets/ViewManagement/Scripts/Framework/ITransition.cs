@@ -10,8 +10,9 @@ namespace XLib.ViewMgmt.Transitions
       IEnumerator DoTransition(StringKeyDictionary pInfo);
       void Rewind();
       IEnumerator GetEnumerator(StringKeyDictionary pInfo);
+      void moveViewToBackground();
    }
 
-   public interface InTransition : ITransition { bool BeginsInTheBackground { get; } }
-   public interface OutTransition : ITransition  { }
+   public interface TransitionIntro : ITransition { bool BeginsInTheBackground { get; } }
+   public interface TransitionOutro : ITransition  { }
 }

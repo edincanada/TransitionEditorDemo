@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: d9ffe56b21fbd354ca6a2267ada0c477
+timeCreated: 1525007235
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 72
+  forceTextureCase: 0
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Science Fair
+  fontNames:
+  - Science Fair
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

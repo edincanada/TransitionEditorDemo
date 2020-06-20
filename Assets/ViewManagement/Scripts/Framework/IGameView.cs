@@ -13,11 +13,11 @@ namespace XLib.ViewMgmt
       bool CanBeCached { get; }
 
       IEnumerable WillAppear(StringKeyDictionary pInfo);
-      InTransition TransitionIn(string pName , StringKeyDictionary pInfo = null , bool pSkip = false );
+      TransitionIntro TransitionIntro(string pName , StringKeyDictionary pInfo = null , bool pSkip = false );
       IEnumerable DidAppear(StringKeyDictionary pInfo);
 
       IEnumerable WillDisappear(StringKeyDictionary pInfo);
-      OutTransition TransitionOut(string pName , StringKeyDictionary pInfo = null , bool pSkip = false );
+      TransitionOutro TransitionOutro(string pName , StringKeyDictionary pInfo = null , bool pSkip = false );
       IEnumerable DidDisappear(StringKeyDictionary pInfo);
 
       GameObject gameObject { get; }

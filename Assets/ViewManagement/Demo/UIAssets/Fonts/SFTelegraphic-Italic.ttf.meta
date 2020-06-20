@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: da718d1929ee64347a0cd5b84e45910f
+timeCreated: 1525639085
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 72
+  forceTextureCase: 0
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: SF Telegraphic
+  fontNames:
+  - SF Telegraphic
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2ac07a3d2d3ac3349844b99ee3f754a7, type: 3}
+  - {fileID: 12800000, guid: 6cfda0bfbd079114d9440313da7e5e5e, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

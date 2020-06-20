@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 183ee59e922eba848891a93370341095
+timeCreated: 1525639084
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 72
+  forceTextureCase: 0
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: SF Telegraphic Light
+  fontNames:
+  - SF Telegraphic Light
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
